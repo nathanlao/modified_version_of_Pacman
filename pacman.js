@@ -5,14 +5,6 @@ var gl;
 var program;
 var vBuffer;
 
-// // Four Vertices for canvas square
-// var vertices = [
-// 	vec2( -0.5, -0.5 ),
-// 	vec2(  -0.5, 0.5 ),
-// 	vec2(  0.5, 0.5 ),
-// 	vec2( 0.5, -0.5 ),
-// ];
-
 function initializeContext() {
 
     canvas = document.getElementById( "gl-canvas" );
