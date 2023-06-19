@@ -2,8 +2,10 @@
 var canvas;
 var gl;
 
-var program;
-var vBuffer;
+var programBlueBorders;
+var programGreyCorridors;
+var vBufferBorders;
+var vBufferCorridors;
 
 function initializeContext() {
 
@@ -25,27 +27,15 @@ async function setup() {
     // Initialize the context.
     initializeContext();
 
-    // TODO: delete commented code
-    // Set event listeners
-    // setEventListeners(canvas);
-
-    // Create data for grey canvas square
-    grayCorridors();
+    // Create data for pacman
+    canvasPacman();
 
     // Create vertex buffer data.
     createBuffers();
 
-    // TODO: delete commented code
-    // Load shader files
-    // await loadShaders();
-
-    //  Load shaders and initialize attribute buffers
-    program = initShaders( gl, "vertex-shader", "fragment-shader" );
-	gl.useProgram( program );
-
-    // TODO: delete commented code
-    // Compile the shaders
-    // compileShaders();
+    // Load shaders (from html) and initialize attribute buffers
+    programBlueBorders = initShaders( gl, "vertex-shader", "fragment-shader-blue-borders" );
+    programGreyCorridors = initShaders( gl, "vertex-shader", "fragment-shader-grey-corridors" );
 
     // Create vertex array objects
     createVertexArrayObjects();
@@ -56,47 +46,80 @@ async function setup() {
 
 window.onload = setup;
 
-var positions = [];
+var positionsBlue = [];
+var positionsGrey = [];
 
-function grayCorridors() {
-    // Four Vertices for canvas square
-    var vertices = [
-        vec2( -0.5, -0.5 ),
-        vec2(  -0.5, 0.5 ),
-        vec2(  0.5, 0.5 ),
-        vec2( 0.5, -0.5 ),
+function canvasPacman() {
+    // Four Vertices for blue borders
+    var verticesBlueBorders = [
+        vec2( -0.8, -0.8 ),
+        vec2( -0.8, 0.8 ),
+        vec2( 0.8, 0.8 ),
+        vec2( 0.8, -0.8 ),
+    ];
+
+    // Four Vertices for grey square
+    var verticesGreyCorridors = [
+        vec2( -0.75, -0.75 ),
+        vec2( -0.75, 0.75 ),
+        vec2( 0.75, 0.75 ),
+        vec2( 0.75, -0.75 ),
     ];
 
     // flatten
-    positions = flatten(vertices);
+    positionsBlue = flatten(verticesBlueBorders);
+    positionsGrey = flatten(verticesGreyCorridors);
 }
 
 function createBuffers() {
     // Load data into GPU
 	// Creating the vertex buffer
 	vBuffer = gl.createBuffer();
-
     // Binding the vertex buffer
-	gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer);
-	gl.bufferData( gl.ARRAY_BUFFER,  new Float32Array(positions), gl.STATIC_DRAW );   
+	gl.bindBuffer(gl.ARRAY_BUFFER, vBufferBorders);
+	gl.bufferData( gl.ARRAY_BUFFER,  new Float32Array(positionsBlue), gl.STATIC_DRAW );   
+
+    // Load data into GPU for grey square
+    vBufferGrey = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBufferCorridors);
+    gl.bufferData( gl.ARRAY_BUFFER,  new Float32Array(positionsGrey), gl.STATIC_DRAW ); 
 
     logMessage("Created buffers.");
 }
 
 function createVertexArrayObjects() { 
     // Associate out shader variables with our data buffer
-	var vPosition = gl.getAttribLocation( program, "vPosition" );
-	gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 );
-	gl.enableVertexAttribArray( vPosition );   
-
+    // For blue borders
+    gl.useProgram( programBlueBorders );
+	var vPositionBlue = gl.getAttribLocation( programBlueBorders, "vPosition" );
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBufferBorders);
+	gl.vertexAttribPointer( vPositionBlue, 2, gl.FLOAT, false, 0, 0 );
+	gl.enableVertexAttribArray( vPositionBlue );
+    
+    // For grey square
+    gl.useProgram( programGreyCorridors );
+    var vPositionGrey = gl.getAttribLocation( programGreyCorridors, "vPosition" );
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBufferCorridors);
+    gl.vertexAttribPointer( vPositionGrey, 2, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( vPositionGrey );
+    
     logMessage("Created VAOs.");
 }
 
 
 function render() {
-	// Clearing the buffer and drawing the square
+	// Clearing the buffer
 	gl.clear( gl.COLOR_BUFFER_BIT ); 
-	// gl.drawArrays( gl.TRIANGLES_FAN, 0, 4 );
+
+    // Blue borders
+    gl.useProgram( programBlueBorders );
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBufferBorders);
+	gl.drawArrays( gl.LINE_LOOP, 0, 4 ); // line loop for border
+
+    // Draw grey square
+    gl.useProgram( programGreyCorridors );
+    gl.bindBuffer(gl.ARRAY_BUFFER, vBufferCorridors);
+    gl.drawArrays( gl.TRIANGLE_FAN, 0, 4 );
 }
 
 // Logging

@@ -8,10 +8,16 @@
                 gl_Position = vPosition;
             }
         </script>
-        <script id="fragment-shader" type="x-shader/x-fragment">
+        <script id="fragment-shader-blue-borders" type="x-shader/x-fragment">
             precision mediump float;
             void main() {
                 gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0); // blue
+            }
+        </script>
+        <script id="fragment-shader-grey-corridors" type="x-shader/x-fragment">
+            precision mediump float;
+            void main() {
+                gl_FragColor = vec4(0.8, 0.8, 0.8, 1.0); // light grey
             }
         </script>
         <script type="text/javascript" src="../Common/webgl-utils.js"></script>
