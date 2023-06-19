@@ -74,13 +74,13 @@ function canvasPacman() {
 function createBuffers() {
     // Load data into GPU
 	// Creating the vertex buffer
-	vBuffer = gl.createBuffer();
+	vBufferBorders = gl.createBuffer();
     // Binding the vertex buffer
 	gl.bindBuffer(gl.ARRAY_BUFFER, vBufferBorders);
 	gl.bufferData( gl.ARRAY_BUFFER,  new Float32Array(positionsBlue), gl.STATIC_DRAW );   
 
     // Load data into GPU for grey square
-    vBufferGrey = gl.createBuffer();
+    vBufferCorridors = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vBufferCorridors);
     gl.bufferData( gl.ARRAY_BUFFER,  new Float32Array(positionsGrey), gl.STATIC_DRAW ); 
 
