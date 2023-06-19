@@ -60,10 +60,10 @@ function canvasPacman() {
 
     // Four Vertices for grey square
     var verticesGreyCorridors = [
-        vec2( -0.75, -0.75 ),
-        vec2( -0.75, 0.75 ),
-        vec2( 0.75, 0.75 ),
-        vec2( 0.75, -0.75 ),
+        vec2( -0.8, -0.8 ),
+        vec2( -0.8, 0.8 ),
+        vec2( 0.8, 0.8 ),
+        vec2( 0.8, -0.8 ),
     ];
 
     // flatten
