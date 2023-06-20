@@ -14,7 +14,7 @@ var verticesGreyCorridors = [
     vec2( 0.8, -0.8 ),
 ];
 
-// Four vertices for green blocks
+// Four vertices for green blocks (4 large ones)
 var verticesGreenBlock1 = [
     vec2( -0.65, -0.35 ),
     vec2( -0.65, -0.65 ),
@@ -41,6 +41,21 @@ var verticesGreenBlock4 = [
     vec2( 0.65, 0.65 ),
     vec2( 0.2, 0.65 ),
     vec2( 0.2, 0.35 ),
+];
+
+// Four vertices for green blocks (2 small ones)
+var verticesGreenBlock5 = [
+    vec2( -0.65, -0.2 ),
+    vec2( -0.65, 0.2 ),
+    vec2( -0.5, 0.2 ),
+    vec2( -0.5, -0.2 ),
+];
+
+var verticesGreenBlock6 = [
+    vec2( 0.65, 0.2 ),
+    vec2( 0.65, -0.2 ),
+    vec2( 0.5, -0.2 ),
+    vec2( 0.5, 0.2),
 ];
 
 function initializeContext() {
@@ -123,6 +138,8 @@ function render() {
     var bufferIdGreen2 = createBuffers(verticesGreenBlock2)
     var bufferIdGreen3 = createBuffers(verticesGreenBlock3)
     var bufferIdGreen4 = createBuffers(verticesGreenBlock4)
+    var bufferIdGreen5 = createBuffers(verticesGreenBlock5)
+    var bufferIdGreen6 = createBuffers(verticesGreenBlock6)
     
     createVertexArrayObjects(bufferIdGreen1, programGreenBlock)
     renderTriangleFan(verticesGreenBlock1, programGreenBlock)
@@ -132,6 +149,11 @@ function render() {
     renderTriangleFan(verticesGreenBlock3, programGreenBlock)
     createVertexArrayObjects(bufferIdGreen4, programGreenBlock)
     renderTriangleFan(verticesGreenBlock4, programGreenBlock)
+    createVertexArrayObjects(bufferIdGreen5, programGreenBlock)
+    renderTriangleFan(verticesGreenBlock5, programGreenBlock)
+    createVertexArrayObjects(bufferIdGreen6, programGreenBlock)
+    renderTriangleFan(verticesGreenBlock6, programGreenBlock)
+
 }
 
 window.onload = setup
