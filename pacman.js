@@ -6,6 +6,7 @@ var gl;
 var programGreyCorridors;
 var programGreenBlock;
 var programBluePacman;
+var programDashedRectangle;
 
 // Four Vertices for grey square
 var verticesGreyCorridors = [
@@ -66,6 +67,33 @@ var verticesBluePacman = [
     vec2( 0.0, -0.67 ) // top 
 ];
 
+
+// Vertices for each side of the dashed rectangle
+var verticesDashedRectangle = [
+    vec2( -0.085, -0.2 ), vec2( -0.05, -0.2 ), //  bottom 
+    vec2( -0.02, -0.2 ), vec2( 0.01, -0.2  ), 
+    vec2( 0.085, -0.2 ), vec2( 0.05, -0.2  ), 
+
+    vec2( 0.085, -0.19 ), vec2( 0.085, -0.14 ),
+    vec2( 0.085, -0.1 ), vec2( 0.085, -0.06 ), // right 
+    vec2( 0.085, 0.02 ), vec2( 0.085, -0.02 ), 
+    vec2( 0.085, 0.06 ), vec2( 0.085, 0.09 ), 
+    vec2( 0.085, 0.12 ), vec2( 0.085, 0.15 ), 
+    vec2( 0.085, 0.18 ), vec2( 0.085, 0.2 ), 
+
+
+    vec2( -0.085, 0.2 ), vec2( -0.05, 0.2 ), // top 
+    vec2( 0.02, 0.2 ), vec2( -0.01, 0.2 ), 
+    vec2( 0.085, 0.2 ), vec2( 0.05, 0.2  ),
+
+    vec2( -0.085, -0.19 ), vec2( -0.085, -0.14 ), // left
+    vec2( -0.085, -0.1 ), vec2( -0.085, -0.06 ), 
+    vec2( -0.085, 0.02 ), vec2( -0.085, -0.02 ), 
+    vec2( -0.085, 0.06 ), vec2( -0.085, 0.09 ), 
+    vec2( -0.085, 0.12 ), vec2( -0.085, 0.15 ), 
+    vec2( -0.085, 0.18 ), vec2( -0.085, 0.2 ), 
+];
+
 function initializeContext() {
 
     canvas = document.getElementById( "gl-canvas" );
@@ -95,6 +123,7 @@ async function setup() {
     programGreyCorridors = initShaders( gl, "vertex-shader", "fragment-shader-grey-corridors" )
     programGreenBlock = initShaders( gl, "vertex-shader", "fragment-shader-green-blocks" )
     programBluePacman = initShaders( gl, "vertex-shader", "fragment-shader-blue-pacman")
+    programDashedRectangle = initShaders( gl, "vertex-shader", "fragment-shader-dashed-rectangle" )
 
     // Draw!
     render()
@@ -126,7 +155,7 @@ function createVertexArrayObjects(bufferId, program) {
     logMessage("Created VAOs.")
 }
 
-// Render TRIANGLE_FAN
+// Helper function to render TRIANGLE_FAN
 function renderTriangleFan(vertices, program) {
     gl.useProgram( program )
     gl.drawArrays( gl.TRIANGLE_FAN, 0, vertices.length )
@@ -167,6 +196,12 @@ function render() {
     var bufferIdBluePacman = createBuffers(verticesBluePacman)
     createVertexArrayObjects(bufferIdBluePacman, programBluePacman)
     gl.drawArrays(gl.TRIANGLES, 0, verticesBluePacman.length)
+
+    // Dashed Rectangle
+    var bufferIdDashedRectangle = createBuffers(verticesDashedRectangle)
+    createVertexArrayObjects(bufferIdDashedRectangle, programDashedRectangle)
+    gl.drawArrays(gl.LINES, 0, verticesDashedRectangle.length)
+
 
 }
 
