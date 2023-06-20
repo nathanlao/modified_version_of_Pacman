@@ -7,6 +7,8 @@ var programGreyCorridors;
 var programGreenBlock;
 var programBluePacman;
 var programDashedRectangle;
+var programRedGhost;
+var programBlueGhost;
 
 // Four Vertices for grey square
 var verticesGreyCorridors = [
@@ -94,6 +96,22 @@ var verticesDashedRectangle = [
     vec2( -0.085, 0.18 ), vec2( -0.085, 0.2 ), 
 ];
 
+// Vertices for red ghost and blue ghost
+var verticesRedGhost = [
+    vec2( -0.05, 0.05 ),
+    vec2( -0.05, 0.15 ),
+    vec2( 0.05, 0.15 ),
+    vec2( 0.05, 0.05 ),
+];
+
+var verticesBlueGhost = [
+    vec2( -0.05, -0.15 ),
+    vec2( -0.05, -0.05 ),
+    vec2( 0.05, -0.05 ),
+    vec2( 0.05, -0.15 ),
+];
+
+
 function initializeContext() {
 
     canvas = document.getElementById( "gl-canvas" );
@@ -124,7 +142,9 @@ async function setup() {
     programGreenBlock = initShaders( gl, "vertex-shader", "fragment-shader-green-blocks" )
     programBluePacman = initShaders( gl, "vertex-shader", "fragment-shader-blue-pacman")
     programDashedRectangle = initShaders( gl, "vertex-shader", "fragment-shader-dashed-rectangle" )
-
+    programRedGhost = initShaders( gl, "vertex-shader", "fragment-shader-red-ghost" )
+    programBlueGhost = initShaders( gl, "vertex-shader", "fragment-shader-blue-ghost" )
+    
     // Draw!
     render()
 }
@@ -202,7 +222,15 @@ function render() {
     createVertexArrayObjects(bufferIdDashedRectangle, programDashedRectangle)
     gl.drawArrays(gl.LINES, 0, verticesDashedRectangle.length)
 
+    // Red Ghost
+    var bufferIdRedGhost = createBuffers(verticesRedGhost)
+    createVertexArrayObjects(bufferIdRedGhost, programRedGhost)
+    renderTriangleFan(verticesRedGhost, programRedGhost)
 
+    // Blue Ghost
+    var bufferIdBlueGhost = createBuffers(verticesBlueGhost)
+    createVertexArrayObjects(bufferIdBlueGhost, programBlueGhost)
+    renderTriangleFan(verticesBlueGhost, programBlueGhost)
 }
 
 window.onload = setup

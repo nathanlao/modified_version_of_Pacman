@@ -38,6 +38,18 @@
                 gl_FragColor = vec4(0.22, 0.322, 0.678, 1.0); // blue
             }
         </script>
+        <script id="fragment-shader-red-ghost" type="x-shader/x-fragment">
+            precision mediump float;
+            void main() {
+                gl_FragColor = vec4(0.925, 0.341, 0.333, 1.0); // red
+            }
+        </script>
+        <script id="fragment-shader-blue-ghost" type="x-shader/x-fragment">
+            precision mediump float;
+            void main() {
+                gl_FragColor = vec4(0.318, 0.824, 0.835, 1.0); // light blue
+            }
+        </script>
         <script type="text/javascript" src="../Common/webgl-utils.js"></script>
         <script type="text/javascript" src="../Common/initShaders.js"></script>
         <script type="text/javascript" src="../Common/MV.js"></script>
