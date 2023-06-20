@@ -16,28 +16,31 @@ var verticesGreyCorridors = [
 
 // Four vertices for green blocks
 var verticesGreenBlock1 = [
-    vec2( -0.65, -0.4 ),
+    vec2( -0.65, -0.35 ),
     vec2( -0.65, -0.65 ),
     vec2( -0.2, -0.65 ),
-    vec2( -0.2, -0.4 ),
+    vec2( -0.2, -0.35 ),
 ];
+
 var verticesGreenBlock2 = [
-    vec2( 0.55, -0.8 ),
-    vec2( 0.55, -0.6 ),
-    vec2( 0.8, -0.6 ),
-    vec2( 0.8, -0.8 ),
+    vec2( 0.65, -0.35 ),
+    vec2( 0.65, -0.65 ),
+    vec2( 0.2, -0.65 ),
+    vec2( 0.2, -0.35 ),
 ];
+
 var verticesGreenBlock3 = [
-    vec2( -0.8, 0.6 ),
-    vec2( -0.8, 0.8 ),
-    vec2( -0.55, 0.8 ),
-    vec2( -0.55, 0.6 ),
+    vec2( -0.2, 0.35 ),
+    vec2( -0.2, 0.65 ),
+    vec2( -0.65, 0.65 ),
+    vec2( -0.65, 0.35 ),
 ];
+
 var verticesGreenBlock4 = [
-    vec2( 0.55, 0.6 ),
-    vec2( 0.55, 0.8 ),
-    vec2( 0.8, 0.8 ),
-    vec2( 0.8, 0.6 ),
+    vec2( 0.65, 0.35 ),
+    vec2( 0.65, 0.65 ),
+    vec2( 0.2, 0.65 ),
+    vec2( 0.2, 0.35 ),
 ];
 
 function initializeContext() {
