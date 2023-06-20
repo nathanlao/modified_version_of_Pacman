@@ -5,6 +5,7 @@ var gl;
 // var programBlueBorders;
 var programGreyCorridors;
 var programGreenBlock;
+var programBluePacman;
 
 // Four Vertices for grey square
 var verticesGreyCorridors = [
@@ -18,20 +19,20 @@ var verticesGreyCorridors = [
 var verticesGreenBlock1 = [
     vec2( -0.65, -0.35 ),
     vec2( -0.65, -0.65 ),
-    vec2( -0.2, -0.65 ),
-    vec2( -0.2, -0.35 ),
+    vec2( -0.085, -0.65 ),
+    vec2( -0.085, -0.35 ),
 ];
 
 var verticesGreenBlock2 = [
     vec2( 0.65, -0.35 ),
     vec2( 0.65, -0.65 ),
-    vec2( 0.2, -0.65 ),
-    vec2( 0.2, -0.35 ),
+    vec2( 0.085, -0.65 ),
+    vec2( 0.085, -0.35 ),
 ];
 
 var verticesGreenBlock3 = [
-    vec2( -0.2, 0.35 ),
-    vec2( -0.2, 0.65 ),
+    vec2( -0.085, 0.35 ),
+    vec2( -0.085, 0.65 ),
     vec2( -0.65, 0.65 ),
     vec2( -0.65, 0.35 ),
 ];
@@ -39,11 +40,11 @@ var verticesGreenBlock3 = [
 var verticesGreenBlock4 = [
     vec2( 0.65, 0.35 ),
     vec2( 0.65, 0.65 ),
-    vec2( 0.2, 0.65 ),
-    vec2( 0.2, 0.35 ),
+    vec2( 0.085, 0.65 ),
+    vec2( 0.085, 0.35 ),
 ];
 
-// Four vertices for green blocks (2 small ones)
+// Two vertices for green blocks (2 small ones)
 var verticesGreenBlock5 = [
     vec2( -0.65, -0.2 ),
     vec2( -0.65, 0.2 ),
@@ -56,6 +57,13 @@ var verticesGreenBlock6 = [
     vec2( 0.65, -0.2 ),
     vec2( 0.5, -0.2 ),
     vec2( 0.5, 0.2),
+];
+
+// Blue triangle pacman
+var verticesBluePacman = [
+    vec2( -0.05, -0.77 ), // bottom left 
+    vec2( 0.05, -0.77 ), // bottom right
+    vec2( 0.0, -0.67 ) // top 
 ];
 
 function initializeContext() {
@@ -86,6 +94,7 @@ async function setup() {
     // Load shaders (from html) and initialize attribute buffers
     programGreyCorridors = initShaders( gl, "vertex-shader", "fragment-shader-grey-corridors" )
     programGreenBlock = initShaders( gl, "vertex-shader", "fragment-shader-green-blocks" )
+    programBluePacman = initShaders( gl, "vertex-shader", "fragment-shader-blue-pacman")
 
     // Draw!
     render()
@@ -153,6 +162,11 @@ function render() {
     renderTriangleFan(verticesGreenBlock5, programGreenBlock)
     createVertexArrayObjects(bufferIdGreen6, programGreenBlock)
     renderTriangleFan(verticesGreenBlock6, programGreenBlock)
+
+    // Blue Pacman
+    var bufferIdBluePacman = createBuffers(verticesBluePacman)
+    createVertexArrayObjects(bufferIdBluePacman, programBluePacman)
+    gl.drawArrays(gl.TRIANGLES, 0, verticesBluePacman.length)
 
 }
 
