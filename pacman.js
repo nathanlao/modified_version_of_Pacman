@@ -49,15 +49,15 @@ var verticesGreenBlock4 = [
 var verticesGreenBlock5 = [
     vec2( -0.65, -0.2 ),
     vec2( -0.65, 0.2 ),
-    vec2( -0.5, 0.2 ),
-    vec2( -0.5, -0.2 ),
+    vec2( -0.45, 0.2 ),
+    vec2( -0.45, -0.2 ),
 ];
 
 var verticesGreenBlock6 = [
     vec2( 0.65, 0.2 ),
     vec2( 0.65, -0.2 ),
-    vec2( 0.5, -0.2 ),
-    vec2( 0.5, 0.2),
+    vec2( 0.45, -0.2 ),
+    vec2( 0.45, 0.2),
 ];
 
 // Blue triangle pacman
