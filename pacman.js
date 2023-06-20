@@ -14,12 +14,30 @@ var verticesGreyCorridors = [
     vec2( 0.8, -0.8 ),
 ];
 
-// Four vertices for a green block
-var verticesGreenBlock = [
-    vec2( -0.6, -0.01 ),
-    vec2( -0.6, 0.6 ),
-    vec2( 0.01, 0.6 ),
-    vec2( 0.01, -0.01 ),
+// Four vertices for green blocks
+var verticesGreenBlock1 = [
+    vec2( -0.65, -0.4 ),
+    vec2( -0.65, -0.65 ),
+    vec2( -0.2, -0.65 ),
+    vec2( -0.2, -0.4 ),
+];
+var verticesGreenBlock2 = [
+    vec2( 0.55, -0.8 ),
+    vec2( 0.55, -0.6 ),
+    vec2( 0.8, -0.6 ),
+    vec2( 0.8, -0.8 ),
+];
+var verticesGreenBlock3 = [
+    vec2( -0.8, 0.6 ),
+    vec2( -0.8, 0.8 ),
+    vec2( -0.55, 0.8 ),
+    vec2( -0.55, 0.6 ),
+];
+var verticesGreenBlock4 = [
+    vec2( 0.55, 0.6 ),
+    vec2( 0.55, 0.8 ),
+    vec2( 0.8, 0.8 ),
+    vec2( 0.8, 0.6 ),
 ];
 
 function initializeContext() {
@@ -47,9 +65,11 @@ async function setup() {
     // Initialize the context.
     initializeContext()
 
+    // Load shaders (from html) and initialize attribute buffers
     programGreyCorridors = initShaders( gl, "vertex-shader", "fragment-shader-grey-corridors" )
     programGreenBlock = initShaders( gl, "vertex-shader", "fragment-shader-green-blocks" )
 
+    // Draw!
     render()
 }
 
@@ -96,9 +116,19 @@ function render() {
     renderTriangleFan(verticesGreyCorridors, programGreyCorridors)
 
     // Green Obstacles
-    var bufferIdGreen = createBuffers(verticesGreenBlock)
-    createVertexArrayObjects(bufferIdGreen, programGreenBlock)
-    renderTriangleFan(verticesGreenBlock, programGreenBlock)
+    var bufferIdGreen1 = createBuffers(verticesGreenBlock1)
+    var bufferIdGreen2 = createBuffers(verticesGreenBlock2)
+    var bufferIdGreen3 = createBuffers(verticesGreenBlock3)
+    var bufferIdGreen4 = createBuffers(verticesGreenBlock4)
+    
+    createVertexArrayObjects(bufferIdGreen1, programGreenBlock)
+    renderTriangleFan(verticesGreenBlock1, programGreenBlock)
+    createVertexArrayObjects(bufferIdGreen2, programGreenBlock)
+    renderTriangleFan(verticesGreenBlock2, programGreenBlock)
+    createVertexArrayObjects(bufferIdGreen3, programGreenBlock)
+    renderTriangleFan(verticesGreenBlock3, programGreenBlock)
+    createVertexArrayObjects(bufferIdGreen4, programGreenBlock)
+    renderTriangleFan(verticesGreenBlock4, programGreenBlock)
 }
 
 window.onload = setup
