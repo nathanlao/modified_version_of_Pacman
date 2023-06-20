@@ -9,3 +9,6 @@ https://github.com/bonigarcia/webgl-examples/blob/master/basic_concepts/draw-a-r
 
 ### RGB color 0-1
 https://rgbcolorpicker.com/0-1
+
+### Drawing a circle with triangles WebGL
+https://stackoverflow.com/questions/32780958/drawing-a-circle-with-triangles-webgl

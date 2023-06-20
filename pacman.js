@@ -9,6 +9,7 @@ var programBluePacman;
 var programDashedRectangle;
 var programRedGhost;
 var programBlueGhost;
+var programCircles;
 
 // Four Vertices for grey square
 var verticesGreyCorridors = [
@@ -111,6 +112,10 @@ var verticesBlueGhost = [
     vec2( 0.05, -0.15 ),
 ];
 
+// Vertices for circles on corridors
+var leftCircleVertices = createVerticalCircleVertices(10, -0.72, 0.16, -0.73)
+var rightCircleVertices = createVerticalCircleVertices(10, -0.72, 0.16, 0.73)
+var topLeftCircleVertices = createHorizontalCircleVertices(3, -0.55, 0.16, 0.72)
 
 function initializeContext() {
 
@@ -144,7 +149,8 @@ async function setup() {
     programDashedRectangle = initShaders( gl, "vertex-shader", "fragment-shader-dashed-rectangle" )
     programRedGhost = initShaders( gl, "vertex-shader", "fragment-shader-red-ghost" )
     programBlueGhost = initShaders( gl, "vertex-shader", "fragment-shader-blue-ghost" )
-    
+    programCircles = initShaders( gl, "vertex-shader", "fragment-shader-circle" )
+
     // Draw!
     render()
 }
@@ -173,12 +179,6 @@ function createVertexArrayObjects(bufferId, program) {
     gl.enableVertexAttribArray( vPosition )
 
     logMessage("Created VAOs.")
-}
-
-// Helper function to render TRIANGLE_FAN
-function renderTriangleFan(vertices, program) {
-    gl.useProgram( program )
-    gl.drawArrays( gl.TRIANGLE_FAN, 0, vertices.length )
 }
 
 // Render
@@ -231,9 +231,72 @@ function render() {
     var bufferIdBlueGhost = createBuffers(verticesBlueGhost)
     createVertexArrayObjects(bufferIdBlueGhost, programBlueGhost)
     renderTriangleFan(verticesBlueGhost, programBlueGhost)
+
+    // Circles
+    for (let i = 0; i < leftCircleVertices.length; i++) {
+        var bufferIdCircle = createBuffers(leftCircleVertices[i]);
+        createVertexArrayObjects(bufferIdCircle, programCircles);
+        renderTriangleFan(leftCircleVertices[i], programCircles);
+    }
+
+    for (let i = 0; i < rightCircleVertices.length; i++) {
+        var bufferIdCircle = createBuffers(rightCircleVertices[i]);
+        createVertexArrayObjects(bufferIdCircle, programCircles);
+        renderTriangleFan(rightCircleVertices[i], programCircles);
+    }
+
+    for (let i = 0; i < topLeftCircleVertices.length; i++) {
+        var bufferIdCircle = createBuffers(topLeftCircleVertices[i]);
+        createVertexArrayObjects(bufferIdCircle, programCircles);
+        renderTriangleFan(topLeftCircleVertices[i], programCircles);
+    }
+    
 }
 
 window.onload = setup
+
+// Helper function to render TRIANGLE_FAN
+function renderTriangleFan(vertices, program) {
+    gl.useProgram( program )
+    gl.drawArrays( gl.TRIANGLE_FAN, 0, vertices.length )
+}
+
+
+// Helper function to create vertices for vertical circles
+function createVerticalCircleVertices(circleNum, startX, interval, yCoord) {
+    var circleVertices = []
+    var circleRadius = 0.025
+    // Creating vertices for all circles
+    for (let i = 0; i < circleNum; i++) {
+        var centerY = startX + i * interval // Center coordinates for each circle
+        var circle = [];
+        for (let theta = 0; theta <= 2 * Math.PI; theta += Math.PI / 20) {
+            var x = yCoord + circleRadius * Math.cos(theta); // x = cx + r * cos(theta)
+            var y = centerY + circleRadius * Math.sin(theta); // y = cy + r * sin(theta)
+            circle.push(vec2(x, y));
+        }
+        circleVertices.push(circle)
+    }
+    return circleVertices
+}
+
+// Helper function to create vertices for horizontal circles
+function createHorizontalCircleVertices(circleNum, startX, interval, yCoord) {
+    var circleVertices = []
+    var circleRadius = 0.025
+    // Creating vertices for all circles
+    for (let i = 0; i < circleNum; i++) {
+        var centerX = startX + i * interval // Center coordinates for each circle
+        var circle = [];
+        for (let theta = 0; theta <= 2 * Math.PI; theta += Math.PI / 20) {
+            var x = centerX + circleRadius * Math.cos(theta); // x = cx + r * cos(theta)
+            var y = yCoord + circleRadius * Math.sin(theta); // y = cy + r * sin(theta)
+            circle.push(vec2(x, y));
+        }
+        circleVertices.push(circle)
+    }
+    return circleVertices
+}
 
 
 // Logging
