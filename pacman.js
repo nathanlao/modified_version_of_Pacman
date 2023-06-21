@@ -185,55 +185,6 @@ async function setup() {
     startCountdown()
 }
 
-function initializeScoreAndTimer() {
-    // Create score element
-    let scoreEl = document.createElement("div")
-    scoreEl.id = "score"
-    scoreEl.style.position = 'absolute'
-    scoreEl.style.top = '80px'
-    scoreEl.style.left = '440px'
-    scoreEl.style.fontSize = '30px'
-    scoreEl.style.color = '#efefef'
-    document.body.appendChild(scoreEl)
-    updateScore(0)
-
-    // Create timer element
-    let timerEl = document.createElement("div")
-    timerEl.id = "timer"
-    timerEl.style.position = 'absolute'
-    timerEl.style.top = '80px'
-    timerEl.style.left = '70px'
-    timerEl.style.fontSize = '30px'
-    timerEl.style.color = '#efefef'
-    document.body.appendChild(timerEl)
-    updateTimer(time)
-}
-
-function updateScore(newScore) {
-    score = newScore
-    document.getElementById("score").textContent = score
-}
-
-function updateTimer(newTime) {
-    if (isGameOver) { 
-        return;
-    }
-    time = newTime
-    document.getElementById("timer").textContent = time
-}
-
-function startCountdown() {
-    let timerId = setInterval(() => {
-        time--
-        updateTimer(time)
-    
-        if (time <= 0) {
-            isGameOver = true
-            clearInterval(timerId)
-        }
-    }, 1000)
-}
-
 // Create vertex buffer data.
 function createBuffers(vertices) {
     // Load data into GPU
@@ -315,14 +266,23 @@ function render() {
     for (let key in circleVertices) {
         drawCircles(key);
     }
+
+    moveGhost();
+
+    requestAnimationFrame(render)
 }
 
 window.onload = setup
 
-// Define Pacman's initial position
+// Define Pacman/ghosts' initial position
 var pacmanPosition = {
     x: 0.0,
     y: -0.77
+}
+
+var redGhostPosition = { 
+    x: 0.0, 
+    y: 0.05,
 }
 
 // Key press event listener
@@ -483,6 +443,55 @@ function removeCircle(circleName) {
             }
         }
     }
+}
+
+function initializeScoreAndTimer() {
+    // Create score element
+    let scoreEl = document.createElement("div")
+    scoreEl.id = "score"
+    scoreEl.style.position = 'absolute'
+    scoreEl.style.top = '80px'
+    scoreEl.style.left = '440px'
+    scoreEl.style.fontSize = '30px'
+    scoreEl.style.color = '#efefef'
+    document.body.appendChild(scoreEl)
+    updateScore(0)
+
+    // Create timer element
+    let timerEl = document.createElement("div")
+    timerEl.id = "timer"
+    timerEl.style.position = 'absolute'
+    timerEl.style.top = '80px'
+    timerEl.style.left = '70px'
+    timerEl.style.fontSize = '30px'
+    timerEl.style.color = '#efefef'
+    document.body.appendChild(timerEl)
+    updateTimer(time)
+}
+
+function updateScore(newScore) {
+    score = newScore
+    document.getElementById("score").textContent = score
+}
+
+function updateTimer(newTime) {
+    if (isGameOver) { 
+        return;
+    }
+    time = newTime
+    document.getElementById("timer").textContent = time
+}
+
+function startCountdown() {
+    let timerId = setInterval(() => {
+        time--
+        updateTimer(time)
+    
+        if (time <= 0) {
+            isGameOver = true
+            clearInterval(timerId)
+        }
+    }, 1000)
 }
 
 function increaseScore() {
