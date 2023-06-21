@@ -14,6 +14,10 @@ var programCircles;
 // Define distance of two adjacent dots 
 var unit = 0.16;
 
+// global variables
+let score = 0;
+let time = 60;
+
 // Four Vertices for grey square
 var verticesGreyCorridors = [
     vec2( -0.8, -0.8 ),
@@ -171,6 +175,57 @@ async function setup() {
 
     // Draw!
     render()
+
+    // Create and initialize score and timer elements
+    initializeScoreAndTimer()
+
+    // Countdown timer
+    startCountdown()
+}
+
+function initializeScoreAndTimer() {
+    // Create score element
+    let scoreEl = document.createElement("div")
+    scoreEl.id = "score"
+    scoreEl.style.position = 'absolute'
+    scoreEl.style.top = '80px'
+    scoreEl.style.left = '440px'
+    scoreEl.style.fontSize = '30px'
+    scoreEl.style.color = '#efefef'
+    document.body.appendChild(scoreEl)
+    updateScore(0)
+
+    // Create timer element
+    let timerEl = document.createElement("div")
+    timerEl.id = "timer"
+    timerEl.style.position = 'absolute'
+    timerEl.style.top = '80px'
+    timerEl.style.left = '70px'
+    timerEl.style.fontSize = '30px'
+    timerEl.style.color = '#efefef'
+    document.body.appendChild(timerEl)
+    updateTimer(time)
+}
+
+function updateScore(newScore) {
+    score = newScore
+    document.getElementById("score").textContent = score
+}
+
+function updateTimer(newTime) {
+    time = newTime
+    document.getElementById("timer").textContent = time
+}
+
+function startCountdown() {
+    let timerId = setInterval(() => {
+        time--
+        updateTimer(time)
+    
+        if (time <= 0) {
+            clearInterval(timerId)
+        }
+    }, 1000)
 }
 
 // Create vertex buffer data.
