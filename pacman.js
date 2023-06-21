@@ -14,9 +14,11 @@ var programCircles;
 // Define distance of two adjacent dots 
 var unit = 0.16;
 
-// global variables
+// global variables for score and time
 let score = 0;
 let time = 60;
+let totalDots = 59;
+let dotsEaten = 0;
 
 // Four Vertices for grey square
 var verticesGreyCorridors = [
@@ -120,24 +122,24 @@ var verticesBlueGhost = [
 ];
 
 // Vertices for circles on corridors
-var leftCircleVertices = createVerticalCircleVertices(10, -0.72, -0.73)
-var rightCircleVertices = createVerticalCircleVertices(10, -0.72, 0.73)
-var topMidCircleVertices = createVerticalCircleVertices(4, 0.23, 0.0)
-var bottomMidCircleVertices = createVerticalCircleVertices(3, -0.58, 0.0)
-
-var centerLeftCircleVertices1 = createVerticalCircleVertices(2, -0.09, -0.35)
-var centerLeftCircleVertices2 = createVerticalCircleVertices(2, -0.09, -0.18)
-var centerRightCircleVertices1 = createVerticalCircleVertices(2, -0.09, 0.18)
-var centerRightCircleVertices2 = createVerticalCircleVertices(2, -0.09, 0.36)
-
-var topLeftCircleVertices = createHorizontalCircleVertices(3, -0.55, 0.72)
-var topRightCircleVertices = createHorizontalCircleVertices(3, 0.18, 0.72)
-var midLeftCircleVertices = createHorizontalCircleVertices(3, -0.58, 0.26)
-var midRightCircleVertices = createHorizontalCircleVertices(3, 0.18, 0.26)
-var midLeftCircleVertices2 = createHorizontalCircleVertices(3, -0.58, -0.26)
-var midRightCircleVertices2 = createHorizontalCircleVertices(3, 0.18, -0.26)
-var bottomLeftCircleVertices = createHorizontalCircleVertices(3, -0.58, -0.72)
-var bottomRightCircleVertices = createHorizontalCircleVertices(3, 0.18, -0.72)
+var circleVertices = {
+    left: createVerticalCircleVertices(10, -0.72, -0.73),
+    right: createVerticalCircleVertices(10, -0.72, 0.73),
+    topMid: createVerticalCircleVertices(4, 0.23, 0.0),
+    bottomMid: createVerticalCircleVertices(3, -0.58, 0.0),
+    centerLeft1: createVerticalCircleVertices(2, -0.09, -0.35),
+    centerLeft2: createVerticalCircleVertices(2, -0.09, -0.18),
+    centerRight1: createVerticalCircleVertices(2, -0.09, 0.18),
+    centerRight2: createVerticalCircleVertices(2, -0.09, 0.36),
+    topLeft: createHorizontalCircleVertices(3, -0.55, 0.72),
+    topRight: createHorizontalCircleVertices(3, 0.18, 0.72),
+    midLeft: createHorizontalCircleVertices(3, -0.58, 0.26),
+    midRight: createHorizontalCircleVertices(3, 0.18, 0.26),
+    midLeft2: createHorizontalCircleVertices(3, -0.58, -0.26),
+    midRight2: createHorizontalCircleVertices(3, 0.18, -0.26),
+    bottomLeft: createHorizontalCircleVertices(3, -0.58, -0.72),
+    bottomRight: createHorizontalCircleVertices(3, 0.18, -0.72)
+}
 
 function initializeContext() {
 
@@ -154,10 +156,9 @@ function initializeContext() {
     // Enable depth test
     // gl.enable(gl.DEPTH_TEST);
 
-    logMessage("WebGL initialized.");
+    // logMessage("WebGL initialized.");
 
 }
-
 
 // Setup
 async function setup() {
@@ -228,6 +229,19 @@ function startCountdown() {
     }, 1000)
 }
 
+function increaseScore() {
+    score += 100
+    dotsEaten++
+    updateScore(score)
+    if (dotsEaten === totalDots) {
+        endGame()
+    }
+}
+
+function endGame() { 
+    score += time * 100
+}
+
 // Create vertex buffer data.
 function createBuffers(vertices) {
     // Load data into GPU
@@ -237,7 +251,7 @@ function createBuffers(vertices) {
     gl.bindBuffer( gl.ARRAY_BUFFER, bufferId )
     gl.bufferData( gl.ARRAY_BUFFER, flatten(vertices), gl.STATIC_DRAW )
 
-    logMessage("Created buffers.")
+    // logMessage("Created buffers.")
 
     return bufferId
 }
@@ -251,7 +265,7 @@ function createVertexArrayObjects(bufferId, program) {
     gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0 )
     gl.enableVertexAttribArray( vPosition )
 
-    logMessage("Created VAOs.")
+    // logMessage("Created VAOs.")
 }
 
 // Render
@@ -306,102 +320,9 @@ function render() {
     renderTriangleFan(verticesBlueGhost, programBlueGhost)
 
     // Circles
-    for (let i = 0; i < leftCircleVertices.length; i++) {
-        var bufferIdCircle = createBuffers(leftCircleVertices[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(leftCircleVertices[i], programCircles);
+    for (let key in circleVertices) {
+        drawCircles(key);
     }
-
-    for (let i = 0; i < rightCircleVertices.length; i++) {
-        var bufferIdCircle = createBuffers(rightCircleVertices[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(rightCircleVertices[i], programCircles);
-    }
-
-    for (let i = 0; i < topMidCircleVertices.length; i++) {
-        var bufferIdCircle = createBuffers(topMidCircleVertices[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(topMidCircleVertices[i], programCircles);
-    }
-
-    for (let i = 0; i < bottomMidCircleVertices.length; i++) {
-        var bufferIdCircle = createBuffers(bottomMidCircleVertices[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(bottomMidCircleVertices[i], programCircles);
-    }
-
-    for (let i = 0; i < centerLeftCircleVertices1.length; i++) {
-        var bufferIdCircle = createBuffers(centerLeftCircleVertices1[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(centerLeftCircleVertices1[i], programCircles);
-    }
-
-    for (let i = 0; i < centerLeftCircleVertices2.length; i++) {
-        var bufferIdCircle = createBuffers(centerLeftCircleVertices2[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(centerLeftCircleVertices2[i], programCircles);
-    }
-
-    for (let i = 0; i < centerRightCircleVertices1.length; i++) {
-        var bufferIdCircle = createBuffers(centerRightCircleVertices1[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(centerRightCircleVertices1[i], programCircles);
-    }
-
-    for (let i = 0; i < centerRightCircleVertices2.length; i++) {
-        var bufferIdCircle = createBuffers(centerRightCircleVertices2[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(centerRightCircleVertices2[i], programCircles);
-    }
-
-    for (let i = 0; i < topLeftCircleVertices.length; i++) {
-        var bufferIdCircle = createBuffers(topLeftCircleVertices[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(topLeftCircleVertices[i], programCircles);
-    }
-    
-    for (let i = 0; i < topRightCircleVertices.length; i++) {
-        var bufferIdCircle = createBuffers(topRightCircleVertices[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(topRightCircleVertices[i], programCircles);
-    }
-
-    for (let i = 0; i < midLeftCircleVertices.length; i++) {
-        var bufferIdCircle = createBuffers(midLeftCircleVertices[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(midLeftCircleVertices[i], programCircles);
-    }
-
-    for (let i = 0; i < midRightCircleVertices.length; i++) {
-        var bufferIdCircle = createBuffers(midRightCircleVertices[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(midRightCircleVertices[i], programCircles);
-    }
-    
-    for (let i = 0; i < midLeftCircleVertices2.length; i++) {
-        var bufferIdCircle = createBuffers(midLeftCircleVertices2[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(midLeftCircleVertices2[i], programCircles);
-    }
-
-    for (let i = 0; i < midRightCircleVertices2.length; i++) {
-        var bufferIdCircle = createBuffers(midRightCircleVertices2[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(midRightCircleVertices2[i], programCircles);
-    }
-
-    for (let i = 0; i < bottomLeftCircleVertices.length; i++) {
-        var bufferIdCircle = createBuffers(bottomLeftCircleVertices[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(bottomLeftCircleVertices[i], programCircles);
-    }
-
-    for (let i = 0; i < bottomRightCircleVertices.length; i++) {
-        var bufferIdCircle = createBuffers(bottomRightCircleVertices[i]);
-        createVertexArrayObjects(bufferIdCircle, programCircles);
-        renderTriangleFan(bottomRightCircleVertices[i], programCircles);
-    }
-    
 }
 
 window.onload = setup
@@ -410,6 +331,15 @@ window.onload = setup
 function renderTriangleFan(vertices, program) {
     gl.useProgram( program )
     gl.drawArrays( gl.TRIANGLE_FAN, 0, vertices.length )
+}
+
+// Helper function to draw circles
+function drawCircles(circleName) {
+    for (let i = 0; i < circleVertices[circleName].length; i++) {
+        var bufferIdCircle = createBuffers(circleVertices[circleName][i]);
+        createVertexArrayObjects(bufferIdCircle, programCircles);
+        renderTriangleFan(circleVertices[circleName][i], programCircles);
+    }
 }
 
 // Helper function to create vertices for vertical circles

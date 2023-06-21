@@ -15,3 +15,6 @@ https://stackoverflow.com/questions/32780958/drawing-a-circle-with-triangles-web
 
 ### Keyboard events
 https://stackoverflow.com/questions/4416505/how-to-take-keyboard-input-in-javascript
+
+### Not render object when meets conditions
+https://stackoverflow.com/questions/64607556/how-can-i-delete-a-specific-object-in-webgl-without-library
