@@ -12,3 +12,6 @@ https://rgbcolorpicker.com/0-1
 
 ### Drawing a circle with triangles WebGL
 https://stackoverflow.com/questions/32780958/drawing-a-circle-with-triangles-webgl
+
+### Keyboard events
+https://stackoverflow.com/questions/4416505/how-to-take-keyboard-input-in-javascript

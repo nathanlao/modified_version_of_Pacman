@@ -11,6 +11,9 @@ var programRedGhost;
 var programBlueGhost;
 var programCircles;
 
+// Define distance of two adjacent dots 
+var unit = 0.16;
+
 // Four Vertices for grey square
 var verticesGreyCorridors = [
     vec2( -0.8, -0.8 ),
@@ -113,24 +116,24 @@ var verticesBlueGhost = [
 ];
 
 // Vertices for circles on corridors
-var leftCircleVertices = createVerticalCircleVertices(10, -0.72, 0.16, -0.73)
-var rightCircleVertices = createVerticalCircleVertices(10, -0.72, 0.16, 0.73)
-var topMidCircleVertices = createVerticalCircleVertices(4, 0.26, 0.15, 0.0)
-var bottomMidCircleVertices = createVerticalCircleVertices(3, -0.6, 0.16, 0.0)
+var leftCircleVertices = createVerticalCircleVertices(10, -0.72, -0.73)
+var rightCircleVertices = createVerticalCircleVertices(10, -0.72, 0.73)
+var topMidCircleVertices = createVerticalCircleVertices(4, 0.23, 0.0)
+var bottomMidCircleVertices = createVerticalCircleVertices(3, -0.58, 0.0)
 
-var centerLeftCircleVertices1 = createVerticalCircleVertices(2, -0.09, 0.16, -0.39)
-var centerLeftCircleVertices2 = createVerticalCircleVertices(2, -0.09, 0.16, -0.23)
-var centerRightCircleVertices1 = createVerticalCircleVertices(2, -0.09, 0.16, 0.37)
-var centerRightCircleVertices2 = createVerticalCircleVertices(2, -0.09, 0.16, 0.2)
+var centerLeftCircleVertices1 = createVerticalCircleVertices(2, -0.09, -0.35)
+var centerLeftCircleVertices2 = createVerticalCircleVertices(2, -0.09, -0.18)
+var centerRightCircleVertices1 = createVerticalCircleVertices(2, -0.09, 0.18)
+var centerRightCircleVertices2 = createVerticalCircleVertices(2, -0.09, 0.36)
 
-var topLeftCircleVertices = createHorizontalCircleVertices(3, -0.55, 0.16, 0.72)
-var topRightCircleVertices = createHorizontalCircleVertices(3, 0.2, 0.16, 0.72)
-var midLeftCircleVertices = createHorizontalCircleVertices(3, -0.55, 0.16, 0.26)
-var midRightCircleVertices = createHorizontalCircleVertices(3, 0.2, 0.16, 0.26)
-var midLeftCircleVertices2 = createHorizontalCircleVertices(3, -0.55, 0.16, -0.26)
-var midRightCircleVertices2 = createHorizontalCircleVertices(3, 0.2, 0.16, -0.26)
-var bottomLeftCircleVertices = createHorizontalCircleVertices(3, -0.55, 0.16, -0.72)
-var bottomRightCircleVertices = createHorizontalCircleVertices(3, 0.2, 0.16, -0.72)
+var topLeftCircleVertices = createHorizontalCircleVertices(3, -0.55, 0.72)
+var topRightCircleVertices = createHorizontalCircleVertices(3, 0.18, 0.72)
+var midLeftCircleVertices = createHorizontalCircleVertices(3, -0.58, 0.26)
+var midRightCircleVertices = createHorizontalCircleVertices(3, 0.18, 0.26)
+var midLeftCircleVertices2 = createHorizontalCircleVertices(3, -0.58, -0.26)
+var midRightCircleVertices2 = createHorizontalCircleVertices(3, 0.18, -0.26)
+var bottomLeftCircleVertices = createHorizontalCircleVertices(3, -0.58, -0.72)
+var bottomRightCircleVertices = createHorizontalCircleVertices(3, 0.18, -0.72)
 
 function initializeContext() {
 
@@ -355,12 +358,12 @@ function renderTriangleFan(vertices, program) {
 }
 
 // Helper function to create vertices for vertical circles
-function createVerticalCircleVertices(circleNum, startX, interval, yCoord) {
+function createVerticalCircleVertices(circleNum, startX, yCoord) {
     var circleVertices = []
     var circleRadius = 0.025
     // Creating vertices for all circles
     for (let i = 0; i < circleNum; i++) {
-        var centerY = startX + i * interval // Center coordinates for each circle
+        var centerY = startX + i * unit // Center coordinates for each circle
         var circle = [];
         for (let theta = 0; theta <= 2 * Math.PI; theta += Math.PI / 20) {
             var x = yCoord + circleRadius * Math.cos(theta); // x = cx + r * cos(theta)
@@ -373,12 +376,12 @@ function createVerticalCircleVertices(circleNum, startX, interval, yCoord) {
 }
 
 // Helper function to create vertices for horizontal circles
-function createHorizontalCircleVertices(circleNum, startX, interval, yCoord) {
+function createHorizontalCircleVertices(circleNum, startX, yCoord) {
     var circleVertices = []
     var circleRadius = 0.025
     // Creating vertices for all circles
     for (let i = 0; i < circleNum; i++) {
-        var centerX = startX + i * interval // Center coordinates for each circle
+        var centerX = startX + i * 0.2 // Center coordinates for each circle
         var circle = [];
         for (let theta = 0; theta <= 2 * Math.PI; theta += Math.PI / 20) {
             var x = centerX + circleRadius * Math.cos(theta); // x = cx + r * cos(theta)
@@ -388,6 +391,58 @@ function createHorizontalCircleVertices(circleNum, startX, interval, yCoord) {
         circleVertices.push(circle)
     }
     return circleVertices
+}
+
+// Define Pacman's initial position
+var pacmanPosition = {
+    x: 0.0,
+    y: -0.77
+}
+
+// Key press event listener
+window.addEventListener("keydown", function(event) {
+    switch(event.key) {
+        case "ArrowUp":
+            if (canMove(pacmanPosition.x, pacmanPosition.y + 0.16)) {
+                pacmanPosition.y += 0.16
+            }
+            break
+        case "ArrowDown":
+            if (canMove(pacmanPosition.x, pacmanPosition.y - 0.16)) {
+                pacmanPosition.y -= 0.16
+            }
+            break
+        case "ArrowLeft":
+            if (canMove(pacmanPosition.x - 0.18, pacmanPosition.y)) {
+                pacmanPosition.x -= 0.18
+            }
+            break
+        case "ArrowRight":
+            if (canMove(pacmanPosition.x + 0.18, pacmanPosition.y)) {
+                pacmanPosition.x += 0.18
+            }
+            break
+    }
+    
+    // Update the Pacman's vertices after the position change
+    updatePacmanVertices()
+    
+    // Re-render
+    render()
+})
+
+function updatePacmanVertices() {
+    verticesBluePacman = [
+        vec2( pacmanPosition.x - 0.05, pacmanPosition.y ), // bottom left 
+        vec2( pacmanPosition.x + 0.05, pacmanPosition.y ), // bottom right
+        vec2( pacmanPosition.x, pacmanPosition.y + 0.1 ) // top 
+    ];
+}
+
+// Function to check if Pacman can move to the desired position
+function canMove(x, y) {
+    // TODO: check
+    return true
 }
 
 
