@@ -18,3 +18,6 @@ https://stackoverflow.com/questions/4416505/how-to-take-keyboard-input-in-javasc
 
 ### Not render object when meets conditions
 https://stackoverflow.com/questions/64607556/how-can-i-delete-a-specific-object-in-webgl-without-library
+
+### collision detection
+https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Collision_detection

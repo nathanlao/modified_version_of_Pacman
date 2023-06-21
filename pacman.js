@@ -19,6 +19,7 @@ let score = 0;
 let time = 60;
 let totalDots = 59;
 let dotsEaten = 0;
+let isGameOver = false;
 
 // Four Vertices for grey square
 var verticesGreyCorridors = [
@@ -214,6 +215,9 @@ function updateScore(newScore) {
 }
 
 function updateTimer(newTime) {
+    if (isGameOver) { 
+        return;
+    }
     time = newTime
     document.getElementById("timer").textContent = time
 }
@@ -227,19 +231,6 @@ function startCountdown() {
             clearInterval(timerId)
         }
     }, 1000)
-}
-
-function increaseScore() {
-    score += 100
-    dotsEaten++
-    updateScore(score)
-    if (dotsEaten === totalDots) {
-        endGame()
-    }
-}
-
-function endGame() { 
-    score += time * 100
 }
 
 // Create vertex buffer data.
@@ -327,6 +318,96 @@ function render() {
 
 window.onload = setup
 
+// Define Pacman's initial position
+var pacmanPosition = {
+    x: 0.0,
+    y: -0.77
+}
+
+// Key press event listener
+window.addEventListener("keydown", function(event) {
+    switch(event.key) {
+        case "ArrowUp":
+            if (canMove(pacmanPosition.x, pacmanPosition.y + 0.16)) {
+                pacmanPosition.y += 0.16
+            }
+            break
+        case "ArrowDown":
+            if (canMove(pacmanPosition.x, pacmanPosition.y - 0.16)) {
+                pacmanPosition.y -= 0.16
+            }
+            break
+        case "ArrowLeft":
+            if (canMove(pacmanPosition.x - 0.18, pacmanPosition.y)) {
+                pacmanPosition.x -= 0.18
+            }
+            break
+        case "ArrowRight":
+            if (canMove(pacmanPosition.x + 0.18, pacmanPosition.y)) {
+                pacmanPosition.x += 0.18
+            }
+            break
+    }
+
+    // Stop the game if all dots are eaten!!
+    if (isGameOver) { 
+        return;
+    }
+    
+    // Update the Pacman's vertices after the position change
+    updatePacmanVertices()
+
+    // Re-render
+    render()
+})
+
+function updatePacmanVertices() {
+    verticesBluePacman = [
+        vec2( pacmanPosition.x - 0.05, pacmanPosition.y ), // bottom left 
+        vec2( pacmanPosition.x + 0.05, pacmanPosition.y ), // bottom right
+        vec2( pacmanPosition.x, pacmanPosition.y + 0.1 ) // top 
+    ];
+
+    for (let key in circleVertices) {
+        removeCircle(key)
+    }
+}
+
+// Helper function to check if Pacman can move to the desired position
+function canMove(x, y) {
+    // Must be inside the grey corridors
+    if (x < -0.8 || x > 0.8 || y < -0.8 || y > 0.8) {
+        return false;
+    }
+    
+    // Must be outside any of the green obstacles
+    if ((x > -0.65 && x < -0.085) && (y > -0.65 && y < -0.35)) {
+        return false;
+    }
+    if ((x > 0.085 && x < 0.65) && (y > -0.65 && y < -0.35)) {
+        return false;
+    }
+    if ((x > -0.65 && x < -0.085) && (y > 0.35 && y < 0.65)) {
+        return false;
+    }
+    if ((x > 0.085 && x < 0.65) && (y > 0.35 && y < 0.65)) {
+        return false;
+    }
+    if ((x > -0.65 && x < -0.45) && (y > -0.19 && y < 0.19)) {
+        return false;
+    }
+    if ((x > 0.45 && x < 0.65) && (y > -0.19 && y < 0.19)) {
+        return false;
+    }
+    
+    // Must be outside the dashed rectangle
+    if ((x > -0.085 && x < 0.085) && (y > -0.19 && y < 0.19)) {
+        return false;
+    }
+
+    return true;
+}
+
 // Helper function to render TRIANGLE_FAN
 function renderTriangleFan(vertices, program) {
     gl.useProgram( program )
@@ -378,87 +459,45 @@ function createHorizontalCircleVertices(circleNum, startX, yCoord) {
     return circleVertices
 }
 
-// Define Pacman's initial position
-var pacmanPosition = {
-    x: 0.0,
-    y: -0.77
+// Helper function to check if a circle is inside Pac-Man's hitbox
+function isColliding(circle, pacmanVertices) {
+    let pacmanMinX = Math.min(pacmanVertices[0][0], pacmanVertices[1][0], pacmanVertices[2][0])
+    let pacmanMaxX = Math.max(pacmanVertices[0][0], pacmanVertices[1][0], pacmanVertices[2][0])
+    let pacmanMinY = Math.min(pacmanVertices[0][1], pacmanVertices[1][1], pacmanVertices[2][1])
+    let pacmanMaxY = Math.max(pacmanVertices[0][1], pacmanVertices[1][1], pacmanVertices[2][1])
+
+    return circle[0] >= pacmanMinX && circle[0] <= pacmanMaxX && circle[1] >= pacmanMinY && circle[1] <= pacmanMaxY
 }
 
-// Key press event listener
-window.addEventListener("keydown", function(event) {
-    switch(event.key) {
-        case "ArrowUp":
-            if (canMove(pacmanPosition.x, pacmanPosition.y + 0.16)) {
-                pacmanPosition.y += 0.16
+// Helper funtion to remove the circle after got eaten and update the score
+function removeCircle(circleName) {
+    // Iterate over each circle's vertices
+    for (let i = 0; i < circleVertices[circleName].length; i++) {
+        for (let j = 0; j < circleVertices[circleName][i].length; j++) {
+            if (isColliding(circleVertices[circleName][i][j], verticesBluePacman)) {
+                // Remove this circle from the array
+                circleVertices[circleName].splice(i, 1)
+                increaseScore()
+                break
             }
-            break
-        case "ArrowDown":
-            if (canMove(pacmanPosition.x, pacmanPosition.y - 0.16)) {
-                pacmanPosition.y -= 0.16
-            }
-            break
-        case "ArrowLeft":
-            if (canMove(pacmanPosition.x - 0.18, pacmanPosition.y)) {
-                pacmanPosition.x -= 0.18
-            }
-            break
-        case "ArrowRight":
-            if (canMove(pacmanPosition.x + 0.18, pacmanPosition.y)) {
-                pacmanPosition.x += 0.18
-            }
-            break
+        }
     }
-    
-    // Update the Pacman's vertices after the position change
-    updatePacmanVertices()
-    
-    // Re-render
-    render()
-})
-
-function updatePacmanVertices() {
-    verticesBluePacman = [
-        vec2( pacmanPosition.x - 0.05, pacmanPosition.y ), // bottom left 
-        vec2( pacmanPosition.x + 0.05, pacmanPosition.y ), // bottom right
-        vec2( pacmanPosition.x, pacmanPosition.y + 0.1 ) // top 
-    ];
 }
 
-// Function to check if Pacman can move to the desired position
-function canMove(x, y) {
-    // Must be inside the grey corridors
-    if (x < -0.8 || x > 0.8 || y < -0.8 || y > 0.8) {
-        return false;
+function increaseScore() {
+    score += 100
+    dotsEaten++
+    updateScore(score)
+    if (dotsEaten === totalDots) {
+        isGameOver = true
+        endGame()
     }
-    
-    // Must be outside any of the green obstacles
-    if ((x > -0.65 && x < -0.085) && (y > -0.65 && y < -0.35)) {
-        return false;
-    }
-    if ((x > 0.085 && x < 0.65) && (y > -0.65 && y < -0.35)) {
-        return false;
-    }
-    if ((x > -0.65 && x < -0.085) && (y > 0.35 && y < 0.65)) {
-        return false;
-    }
-    if ((x > 0.085 && x < 0.65) && (y > 0.35 && y < 0.65)) {
-        return false;
-    }
-    if ((x > -0.65 && x < -0.45) && (y > -0.19 && y < 0.19)) {
-        return false;
-    }
-    if ((x > 0.45 && x < 0.65) && (y > -0.19 && y < 0.19)) {
-        return false;
-    }
-    
-    // Must be outside the dashed rectangle
-    if ((x > -0.085 && x < 0.085) && (y > -0.19 && y < 0.19)) {
-        return false;
-    }
-
-    return true;
 }
 
+function endGame() { 
+    score += time * 100
+    updateScore(score)
+}
 
 // Logging
 function logMessage(message) {
