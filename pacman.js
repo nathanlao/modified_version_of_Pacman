@@ -228,6 +228,7 @@ function startCountdown() {
         updateTimer(time)
     
         if (time <= 0) {
+            isGameOver = true
             clearInterval(timerId)
         }
     }, 1000)
