@@ -53,17 +53,17 @@ var verticesGreenBlock4 = [
 
 // Two vertices for green blocks (2 small ones)
 var verticesGreenBlock5 = [
-    vec2( -0.65, -0.2 ),
-    vec2( -0.65, 0.2 ),
-    vec2( -0.45, 0.2 ),
-    vec2( -0.45, -0.2 ),
+    vec2( -0.65, -0.19 ),
+    vec2( -0.65, 0.19 ),
+    vec2( -0.45, 0.19 ),
+    vec2( -0.45, -0.19 ),
 ];
 
 var verticesGreenBlock6 = [
-    vec2( 0.65, 0.2 ),
-    vec2( 0.65, -0.2 ),
-    vec2( 0.45, -0.2 ),
-    vec2( 0.45, 0.2),
+    vec2( 0.65, 0.19 ),
+    vec2( 0.65, -0.19 ),
+    vec2( 0.45, -0.19 ),
+    vec2( 0.45, 0.19 ),
 ];
 
 // Blue triangle pacman
@@ -76,28 +76,28 @@ var verticesBluePacman = [
 
 // Vertices for each side of the dashed rectangle
 var verticesDashedRectangle = [
-    vec2( -0.085, -0.2 ), vec2( -0.05, -0.2 ), //  bottom 
-    vec2( -0.02, -0.2 ), vec2( 0.01, -0.2  ), 
-    vec2( 0.085, -0.2 ), vec2( 0.05, -0.2  ), 
+    vec2( -0.085, -0.19 ), vec2( -0.05, -0.19 ), //  bottom 
+    vec2( -0.02, -0.19 ), vec2( 0.01, -0.19 ), 
+    vec2( 0.085, -0.19 ), vec2( 0.05, -0.19 ), 
 
     vec2( 0.085, -0.19 ), vec2( 0.085, -0.14 ),
     vec2( 0.085, -0.1 ), vec2( 0.085, -0.06 ), // right 
     vec2( 0.085, 0.02 ), vec2( 0.085, -0.02 ), 
     vec2( 0.085, 0.06 ), vec2( 0.085, 0.09 ), 
     vec2( 0.085, 0.12 ), vec2( 0.085, 0.15 ), 
-    vec2( 0.085, 0.18 ), vec2( 0.085, 0.2 ), 
+    vec2( 0.085, 0.18 ), vec2( 0.085, 0.19 ), 
 
 
-    vec2( -0.085, 0.2 ), vec2( -0.05, 0.2 ), // top 
-    vec2( 0.02, 0.2 ), vec2( -0.01, 0.2 ), 
-    vec2( 0.085, 0.2 ), vec2( 0.05, 0.2  ),
+    vec2( -0.085, 0.19 ), vec2( -0.05, 0.19 ), // top 
+    vec2( 0.02, 0.19 ), vec2( -0.01, 0.19 ), 
+    vec2( 0.085, 0.19 ), vec2( 0.05, 0.19  ),
 
     vec2( -0.085, -0.19 ), vec2( -0.085, -0.14 ), // left
     vec2( -0.085, -0.1 ), vec2( -0.085, -0.06 ), 
     vec2( -0.085, 0.02 ), vec2( -0.085, -0.02 ), 
     vec2( -0.085, 0.06 ), vec2( -0.085, 0.09 ), 
     vec2( -0.085, 0.12 ), vec2( -0.085, 0.15 ), 
-    vec2( -0.085, 0.18 ), vec2( -0.085, 0.2 ), 
+    vec2( -0.085, 0.18 ), vec2( -0.085, 0.19 ), 
 ];
 
 // Vertices for red ghost and blue ghost
@@ -441,8 +441,37 @@ function updatePacmanVertices() {
 
 // Function to check if Pacman can move to the desired position
 function canMove(x, y) {
-    // TODO: check
-    return true
+    // Must be inside the grey corridors
+    if (x < -0.8 || x > 0.8 || y < -0.8 || y > 0.8) {
+        return false;
+    }
+    
+    // Must be outside any of the green obstacles
+    if ((x > -0.65 && x < -0.085) && (y > -0.65 && y < -0.35)) {
+        return false;
+    }
+    if ((x > 0.085 && x < 0.65) && (y > -0.65 && y < -0.35)) {
+        return false;
+    }
+    if ((x > -0.65 && x < -0.085) && (y > 0.35 && y < 0.65)) {
+        return false;
+    }
+    if ((x > 0.085 && x < 0.65) && (y > 0.35 && y < 0.65)) {
+        return false;
+    }
+    if ((x > -0.65 && x < -0.45) && (y > -0.19 && y < 0.19)) {
+        return false;
+    }
+    if ((x > 0.45 && x < 0.65) && (y > -0.19 && y < 0.19)) {
+        return false;
+    }
+    
+    // Must be outside the dashed rectangle
+    if ((x > -0.085 && x < 0.085) && (y > -0.19 && y < 0.19)) {
+        return false;
+    }
+
+    return true;
 }
 
 
