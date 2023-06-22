@@ -24,6 +24,8 @@ var isGhost = false;
 
 let gameStart = false;
 let gamePaused = false;
+let myReq // Cancel an animation frame request
+
 
 // Four Vertices for grey square
 var verticesGreyCorridors = [
@@ -275,7 +277,7 @@ function render() {
         moveGhost();
     }
         
-    requestAnimationFrame(render)
+    myReq = requestAnimationFrame(render)
 }
 
 window.onload = setup
@@ -387,28 +389,41 @@ window.addEventListener("keydown", function(event) {
 
     switch(event.key) {
         case "ArrowUp":
-            if (canMove(pacmanPosition.x, pacmanPosition.y + 0.16) && gameStart) {
+            if (canMove(pacmanPosition.x, pacmanPosition.y + 0.16) && gameStart && !gamePaused) {
                 pacmanPosition.y += 0.16
             }
             break
         case "ArrowDown":
-            if (canMove(pacmanPosition.x, pacmanPosition.y - 0.16) && gameStart) {
+            if (canMove(pacmanPosition.x, pacmanPosition.y - 0.16) && gameStart && !gamePaused) {
                 pacmanPosition.y -= 0.16
             }
             break
         case "ArrowLeft":
-            if (canMove(pacmanPosition.x - 0.18, pacmanPosition.y) && gameStart) {
+            if (canMove(pacmanPosition.x - 0.18, pacmanPosition.y) && gameStart && !gamePaused) {
                 pacmanPosition.x -= 0.18
             }
             break
         case "ArrowRight":
-            if (canMove(pacmanPosition.x + 0.18, pacmanPosition.y) && gameStart) {
+            if (canMove(pacmanPosition.x + 0.18, pacmanPosition.y) && gameStart && !gamePaused) {
                 pacmanPosition.x += 0.18
             }
             break
         case "s":
             gameStart = true
             break
+        case "p":
+            if (gameStart) { 
+                gamePaused = true
+                cancelAnimationFrame(myReq)
+            }
+            break
+        case "r":
+            if (gameStart) { 
+                gamePaused = false
+                requestAnimationFrame(render)
+            }
+            break
+
     }
 
     // Stop the game if all dots are eaten!!
@@ -600,7 +615,7 @@ function updateTimer(newTime) {
 
 function startCountdown() {
     let timerId = setInterval(() => {
-        if (gameStart) { 
+        if (gameStart && !gamePaused) { 
             time--
             updateTimer(time)
         }
