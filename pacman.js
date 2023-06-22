@@ -20,6 +20,7 @@ let time = 60;
 let totalDots = 59;
 let dotsEaten = 0;
 let isGameOver = false;
+var isGhost = false;
 
 // Four Vertices for grey square
 var verticesGreyCorridors = [
@@ -285,8 +286,100 @@ var redGhostPosition = {
     y: 0.05,
 }
 
+var blueGhostPosition = { 
+    x: 0.0, 
+    y: -0.15,
+}
+
+// Define ghosts' initial direction
+var directions = ['up', 'down', 'left', 'right']
+var redGhostDirection = "up"
+var blueGhostDirection = "down"
+
+function moveGhost() {
+    isGhost = true
+    var speed = 0.01;
+    var randomDir = Math.floor(Math.random() * directions.length)
+
+    switch (redGhostDirection) {
+        case 'up':
+            if (redGhostPosition.y + speed > 0.73 || redGhostPosition.y + speed > 0.26) {
+                redGhostDirection = directions[randomDir]
+            } else {
+                if (canMove(redGhostPosition.x, redGhostPosition.y)) {
+                    redGhostPosition.y += speed
+                }
+            }
+            break
+        case 'down':
+            if (redGhostPosition.y - speed < -0.73) {
+                redGhostDirection = directions[randomDir]
+            } else {
+                if (canMove(redGhostPosition.x, redGhostPosition.y)) {
+                    redGhostPosition.y -= speed
+                }
+            }
+            break
+        case 'left':
+            if (redGhostPosition.x - speed < -0.73) {
+                redGhostDirection = directions[randomDir]
+            } else {
+                if (canMove(redGhostPosition.x, redGhostPosition.y)) {
+                    redGhostPosition.x -= speed
+                }
+            }
+            break
+        case 'right':
+            if (redGhostPosition.x + speed > 0.73) {
+                redGhostDirection = directions[randomDir]
+            } else {
+                if (canMove(redGhostPosition.x, redGhostPosition.y)) {
+                    redGhostPosition.x += speed
+                }
+            }
+            break
+    }
+
+    switch (blueGhostDirection) {
+        case 'up':
+            if (blueGhostPosition.y + speed > 0.73 || blueGhostPosition.y + speed > 0.26) {
+                blueGhostDirection = directions[randomDir]
+            } else {
+                blueGhostPosition.y += speed
+            }
+            break
+        case 'down':
+            if (blueGhostPosition.y - speed < -0.73) {
+                blueGhostDirection = directions[randomDir]
+            } else {
+                blueGhostPosition.y -= speed
+            }
+            break
+        case 'left':
+            if (blueGhostPosition.x - speed < -0.73) {
+                blueGhostDirection = directions[randomDir]
+            } else {
+                blueGhostPosition.x -= speed
+            }
+            break
+        case 'right':
+            if (blueGhostPosition.x + speed > 0.73 || blueGhostPosition.x + speed > 0) {
+                blueGhostDirection = directions[randomDir]
+            } else {
+                blueGhostPosition.x += speed
+            }
+            break
+    }
+
+    updateGhostVertices()
+}
+
+
 // Key press event listener
 window.addEventListener("keydown", function(event) {
+
+    isGhost = false
+
     switch(event.key) {
         case "ArrowUp":
             if (canMove(pacmanPosition.x, pacmanPosition.y + 0.16)) {
@@ -317,9 +410,6 @@ window.addEventListener("keydown", function(event) {
     
     // Update the Pacman's vertices after the position change
     updatePacmanVertices()
-
-    // Re-render
-    render()
 })
 
 function updatePacmanVertices() {
@@ -332,6 +422,22 @@ function updatePacmanVertices() {
     for (let key in circleVertices) {
         removeCircle(key)
     }
+}
+
+function updateGhostVertices() {
+    verticesRedGhost = [
+        vec2( redGhostPosition.x - 0.05, redGhostPosition.y - 0.05 ),
+        vec2( redGhostPosition.x - 0.05, redGhostPosition.y + 0.05 ),
+        vec2( redGhostPosition.x + 0.05, redGhostPosition.y + 0.05 ),
+        vec2( redGhostPosition.x + 0.05, redGhostPosition.y - 0.05 ),
+    ];
+
+    verticesBlueGhost = [
+        vec2( blueGhostPosition.x - 0.05, blueGhostPosition.y - 0.05 ),
+        vec2( blueGhostPosition.x - 0.05, blueGhostPosition.y + 0.05 ),
+        vec2( blueGhostPosition.x + 0.05, blueGhostPosition.y + 0.05 ),
+        vec2( blueGhostPosition.x + 0.05, blueGhostPosition.y - 0.05),
+    ];
 }
 
 // Helper function to check if Pacman can move to the desired position
@@ -354,16 +460,19 @@ function canMove(x, y) {
     if ((x > 0.085 && x < 0.65) && (y > 0.35 && y < 0.65)) {
         return false;
     }
-    if ((x > -0.65 && x < -0.45) && (y > -0.19 && y < 0.19)) {
+    if ((x > -0.65 && x < -0.45) && (y > -0.27 && y < 0.19)) {
+        console.log("hit" + y)
         return false;
     }
     if ((x > 0.45 && x < 0.65) && (y > -0.19 && y < 0.19)) {
         return false;
     }
     
-    // Must be outside the dashed rectangle
-    if ((x > -0.085 && x < 0.085) && (y > -0.19 && y < 0.19)) {
-        return false;
+    // Pacman must be outside the dashed rectangle
+    if (!isGhost) { 
+        if ((x > -0.085 && x < 0.085) && (y > -0.19 && y < 0.19)) {
+            return false;
+        }
     }
 
     return true;
