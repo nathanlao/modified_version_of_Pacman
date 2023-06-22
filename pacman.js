@@ -268,8 +268,10 @@ function render() {
         drawCircles(key);
     }
 
-    moveGhost();
-
+    if (!isGameOver) { 
+        moveGhost();
+    }
+        
     requestAnimationFrame(render)
 }
 
@@ -294,7 +296,7 @@ var blueGhostPosition = {
 // Define ghosts' initial direction
 var directions = ['up', 'down', 'left', 'right']
 var redGhostDirection = "up"
-var blueGhostDirection = "down"
+var blueGhostDirection = "up"
 
 function moveGhost() {
     isGhost = true
@@ -372,6 +374,7 @@ function moveGhost() {
     }
 
     updateGhostVertices()
+    handleCollision()
 }
 
 
@@ -461,7 +464,6 @@ function canMove(x, y) {
         return false;
     }
     if ((x > -0.65 && x < -0.45) && (y > -0.27 && y < 0.19)) {
-        console.log("hit" + y)
         return false;
     }
     if ((x > 0.45 && x < 0.65) && (y > -0.19 && y < 0.19)) {
@@ -616,6 +618,43 @@ function increaseScore() {
 function endGame() { 
     score += time * 100
     updateScore(score)
+}
+
+// Helper function to check collision between ghost and pacman
+function checkGhostsAndPacmanCollision(pacmanPosition, ghostPosition) {
+    const threshold = 0.1
+    const distance = Math.sqrt(
+        Math.pow(pacmanPosition.x - ghostPosition.x, 2) + 
+        Math.pow(pacmanPosition.y - ghostPosition.y, 2)
+    )
+
+    return distance < threshold;
+}
+
+// Helper function to update score and reset ghost's position
+function handleCollision() {
+    if (checkGhostsAndPacmanCollision(pacmanPosition, redGhostPosition)) {
+        // Reset ghost positions
+        redGhostPosition = { x: 0.0, y: 0.05 }
+        redGhostDirection = "up"
+        score -= 500
+        updateScore(score)
+    } else if (checkGhostsAndPacmanCollision(pacmanPosition, blueGhostPosition)) {
+
+        blueGhostPosition = { x: 0.0, y: -0.15 }
+        blueGhostDirection = "up"
+        score -= 500
+        updateScore(score)
+    }
+
+    if (score >= 0) {
+        // Revive Pacman where it was caught
+        pacmanPosition = { x: pacmanPosition.x, y: pacmanPosition.y }
+    } else {
+        // Game over
+        isGameOver = true
+        console.log("Game Over")
+    }
 }
 
 // Logging

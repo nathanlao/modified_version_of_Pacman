@@ -21,3 +21,5 @@ https://stackoverflow.com/questions/64607556/how-can-i-delete-a-specific-object-
 
 ### collision detection
 https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript/Collision_detection
+
+https://stackoverflow.com/questions/41317549/collision-detection-in-javascript-game
