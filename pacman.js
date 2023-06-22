@@ -22,6 +22,9 @@ let dotsEaten = 0;
 let isGameOver = false;
 var isGhost = false;
 
+let gameStart = false;
+let gamePaused = false;
+
 // Four Vertices for grey square
 var verticesGreyCorridors = [
     vec2( -0.8, -0.8 ),
@@ -268,7 +271,7 @@ function render() {
         drawCircles(key);
     }
 
-    if (!isGameOver) { 
+    if (!isGameOver && gameStart) { 
         moveGhost();
     }
         
@@ -377,7 +380,6 @@ function moveGhost() {
     handleCollision()
 }
 
-
 // Key press event listener
 window.addEventListener("keydown", function(event) {
 
@@ -385,24 +387,27 @@ window.addEventListener("keydown", function(event) {
 
     switch(event.key) {
         case "ArrowUp":
-            if (canMove(pacmanPosition.x, pacmanPosition.y + 0.16)) {
+            if (canMove(pacmanPosition.x, pacmanPosition.y + 0.16) && gameStart) {
                 pacmanPosition.y += 0.16
             }
             break
         case "ArrowDown":
-            if (canMove(pacmanPosition.x, pacmanPosition.y - 0.16)) {
+            if (canMove(pacmanPosition.x, pacmanPosition.y - 0.16) && gameStart) {
                 pacmanPosition.y -= 0.16
             }
             break
         case "ArrowLeft":
-            if (canMove(pacmanPosition.x - 0.18, pacmanPosition.y)) {
+            if (canMove(pacmanPosition.x - 0.18, pacmanPosition.y) && gameStart) {
                 pacmanPosition.x -= 0.18
             }
             break
         case "ArrowRight":
-            if (canMove(pacmanPosition.x + 0.18, pacmanPosition.y)) {
+            if (canMove(pacmanPosition.x + 0.18, pacmanPosition.y) && gameStart) {
                 pacmanPosition.x += 0.18
             }
+            break
+        case "s":
+            gameStart = true
             break
     }
 
@@ -595,8 +600,10 @@ function updateTimer(newTime) {
 
 function startCountdown() {
     let timerId = setInterval(() => {
-        time--
-        updateTimer(time)
+        if (gameStart) { 
+            time--
+            updateTimer(time)
+        }
     
         if (time <= 0) {
             isGameOver = true
