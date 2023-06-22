@@ -27,3 +27,9 @@ https://stackoverflow.com/questions/41317549/collision-detection-in-javascript-g
 
 ### cancels an animation frame request
 https://developer.mozilla.org/en-US/docs/Web/API/Window/cancelAnimationFrame
+
+### event shift key
+https://stackoverflow.com/questions/70434938/event-shift-key-in-combination
+
+
+https://www.digitalocean.com/community/tutorials/js-json-parse-stringify

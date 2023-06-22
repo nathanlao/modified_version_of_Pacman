@@ -24,7 +24,9 @@ var isGhost = false;
 
 let gameStart = false;
 let gamePaused = false;
-let myReq // Cancel an animation frame request
+let gameRestart = false;
+let myReq; // Cancel an animation frame request
+let originalCircleVertices; // use to store the circles 
 
 
 // Four Vertices for grey square
@@ -147,6 +149,8 @@ var circleVertices = {
     bottomLeft: createHorizontalCircleVertices(3, -0.58, -0.72),
     bottomRight: createHorizontalCircleVertices(3, 0.18, -0.72)
 }
+
+originalCircleVertices = JSON.parse(JSON.stringify(circleVertices))
 
 function initializeContext() {
 
@@ -276,8 +280,9 @@ function render() {
     if (!isGameOver && gameStart) { 
         moveGhost();
     }
-        
+    
     myReq = requestAnimationFrame(render)
+    
 }
 
 window.onload = setup
@@ -423,7 +428,11 @@ window.addEventListener("keydown", function(event) {
                 requestAnimationFrame(render)
             }
             break
-
+        case "R": // shift+r
+            if (event.shiftKey) {
+                gameRestart = true
+                restartGame()
+            }
     }
 
     // Stop the game if all dots are eaten!!
@@ -677,6 +686,31 @@ function handleCollision() {
         isGameOver = true
         console.log("Game Over")
     }
+}
+
+function restartGame() {
+    gameStart = false; 
+    gamePaused = false; 
+    isGameOver = false; 
+    score = 0; 
+    time = 60; 
+    totalDots = 59; 
+    dotsEaten = 0; 
+    updateScore(score);
+    updateTimer(time);
+    // Reset positions
+    pacmanPosition = {x: 0.0, y: -0.77};
+    redGhostPosition = {x: 0.0, y: 0.08};
+    blueGhostPosition = {x: 0.0, y: -0.1};
+    // Reset directions
+    redGhostDirection = "up";
+    blueGhostDirection = "up";
+    // Reset vertices
+    updatePacmanVertices();
+    updateGhostVertices();
+    // Reset dots
+    circleVertices = JSON.parse(JSON.stringify(originalCircleVertices)) // Reset the circles
+    requestAnimationFrame(render)
 }
 
 // Logging
