@@ -561,7 +561,7 @@ function initializeScoreAndTimer() {
     let scoreEl = document.createElement("div")
     scoreEl.id = "score"
     scoreEl.style.position = 'absolute'
-    scoreEl.style.top = '80px'
+    scoreEl.style.top = '140px'
     scoreEl.style.left = '440px'
     scoreEl.style.fontSize = '30px'
     scoreEl.style.color = '#efefef'
@@ -572,7 +572,7 @@ function initializeScoreAndTimer() {
     let timerEl = document.createElement("div")
     timerEl.id = "timer"
     timerEl.style.position = 'absolute'
-    timerEl.style.top = '80px'
+    timerEl.style.top = '140px'
     timerEl.style.left = '70px'
     timerEl.style.fontSize = '30px'
     timerEl.style.color = '#efefef'

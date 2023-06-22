@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <style>
+            p { 
+                margin: 0;
+            }
+            h2{
+                margin: 10px 0;
+            }
+        </style>
         <script id="vertex-shader" type="x-shader/x-vertex">
             attribute vec4 vPosition;
             uniform float uDepth;
@@ -63,6 +71,10 @@
     </head>
     <body>
         <h2>Pacman Canvas</h2>
+        <p>Press s to start game</p>
+        <p>Press p to pause game</p>
+        <p>Press r to resume game</p>
+        <p>Press shift+r to restart game</p>
         <canvas id="gl-canvas" width="512" height="512">>
             Oops ... your browser doesn't support the HTML5 canvas element
         </canvas>
