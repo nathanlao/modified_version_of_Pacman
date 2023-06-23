@@ -10,6 +10,7 @@ var programDashedRectangle;
 var programRedGhost;
 var programBlueGhost;
 var programCircles;
+var programSpecialCircle;
 
 // Define distance of two adjacent dots 
 var unit = 0.16;
@@ -134,7 +135,7 @@ var verticesBlueGhost = [
 var circleVertices = {
     left: createVerticalCircleVertices(10, -0.72, -0.73),
     right: createVerticalCircleVertices(10, -0.72, 0.73),
-    topMid: createVerticalCircleVertices(4, 0.23, 0.0),
+    topMid: createVerticalCircleVertices(3, 0.4, 0.0),
     bottomMid: createVerticalCircleVertices(3, -0.58, 0.0),
     centerLeft1: createVerticalCircleVertices(2, -0.09, -0.35),
     centerLeft2: createVerticalCircleVertices(2, -0.09, -0.18),
@@ -147,10 +148,12 @@ var circleVertices = {
     midLeft2: createHorizontalCircleVertices(3, -0.58, -0.26),
     midRight2: createHorizontalCircleVertices(3, 0.18, -0.26),
     bottomLeft: createHorizontalCircleVertices(3, -0.58, -0.72),
-    bottomRight: createHorizontalCircleVertices(3, 0.18, -0.72)
+    bottomRight: createHorizontalCircleVertices(3, 0.18, -0.72), 
 }
-
 originalCircleVertices = JSON.parse(JSON.stringify(circleVertices))
+
+var specialItemVertice = createVerticalCircleVertices(1, 0.26, 0.0)
+
 
 function initializeContext() {
 
@@ -184,6 +187,7 @@ async function setup() {
     programRedGhost = initShaders( gl, "vertex-shader", "fragment-shader-red-ghost" )
     programBlueGhost = initShaders( gl, "vertex-shader", "fragment-shader-blue-ghost" )
     programCircles = initShaders( gl, "vertex-shader", "fragment-shader-circle" )
+    programSpecialCircle = initShaders( gl, "vertex-shader", "fragment-shader-special-circle" )
 
     // Draw!
     render()
@@ -276,6 +280,11 @@ function render() {
     for (let key in circleVertices) {
         drawCircles(key);
     }
+
+    // Special item
+    var bufferIdSpecial = createBuffers(specialItemVertice[0])
+    createVertexArrayObjects(bufferIdSpecial, programSpecialCircle)
+    renderTriangleFan(specialItemVertice[0], programSpecialCircle)
 
     if (!isGameOver && gameStart) { 
         moveGhost();
