@@ -284,7 +284,7 @@ function render() {
     }
 
     // Special item
-    if (!specialItemEaten) {
+    if (specialItemVertice.length > 0) {
         var bufferIdSpecial = createBuffers(specialItemVertice[0])
         createVertexArrayObjects(bufferIdSpecial, programSpecialCircle)
         renderTriangleFan(specialItemVertice[0], programSpecialCircle)
@@ -605,11 +605,13 @@ function removeCircle(circleName) {
 
 // Helper funtion to remove the special item after got eaten
 function removeSpecialItem() { 
-    if (isColliding(specialItemVertice[0][0], verticesBluePacman)) {
-        specialItemVertice = []
-        increaseScore()
-        // TODO: Trigger the special item eaten effect
-        specialItemEaten = true
+    if (specialItemVertice.length > 0) {
+        if (isColliding(specialItemVertice[0][0], verticesBluePacman)) {
+            specialItemVertice = []
+            increaseScore()
+
+            specialItemEaten = true
+        }
     }
 }
 
@@ -696,15 +698,27 @@ function handleCollision() {
         // Reset ghost positions
         redGhostPosition = { x: 0.0, y: 0.05 }
         redGhostDirection = "up"
-        score -= 500
-        updateScore(score)
+        if (specialItemEaten) { 
+            specialItemEaten = false
+            // return
+        } else { 
+            score -= 500
+            updateScore(score)
+        }
+        // specialItemEaten = false
     } else if (checkGhostsAndPacmanCollision(pacmanPosition, blueGhostPosition)) {
 
         blueGhostPosition = { x: 0.0, y: -0.15 }
         blueGhostDirection = "up"
-        score -= 500
-        updateScore(score)
+        if (specialItemEaten) {
+            specialItemEaten = false 
+            // return
+        } else { 
+            score -= 500
+            updateScore(score)
+        }
     }
+    // specialItemEaten = false
 
     if (score >= 0) {
         // Revive Pacman where it was caught
