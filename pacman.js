@@ -328,75 +328,91 @@ var blueGhostDirection = "up"
 
 function moveGhost() {
     isGhost = true
-    var speed = 0.01;
+    var changeDirectionProbability = 0.1
     var randomDir = Math.floor(Math.random() * directions.length)
+
+    var baseSpeed = 0.01
+    var timeFactor = (100 - time) / 100 // Time factor increases as time decreases
+    var speed = baseSpeed + timeFactor * 0.04  // Speed increases as time decreases
+
+    if (Math.random() < changeDirectionProbability) {
+        redGhostDirection = directions[randomDir]
+    }
 
     switch (redGhostDirection) {
         case 'up':
-            if (redGhostPosition.y + speed > 0.73 || redGhostPosition.y + speed > 0.26) {
-                redGhostDirection = directions[randomDir]
+            if (redGhostPosition.y + speed > 0.73) {
+                redGhostDirection = directions[randomDir];
             } else {
-                if (canMove(redGhostPosition.x, redGhostPosition.y)) {
-                    redGhostPosition.y += speed
+                if (canMove(redGhostPosition.x, redGhostPosition.y + 0.05)) {
+                    redGhostPosition.y += speed;
                 }
             }
-            break
+            break;
         case 'down':
             if (redGhostPosition.y - speed < -0.73) {
-                redGhostDirection = directions[randomDir]
+                redGhostDirection = directions[randomDir];
             } else {
-                if (canMove(redGhostPosition.x, redGhostPosition.y)) {
-                    redGhostPosition.y -= speed
+                if (canMove(redGhostPosition.x, redGhostPosition.y - 0.05)) {
+                    redGhostPosition.y -= speed;
                 }
             }
-            break
+            break;
         case 'left':
             if (redGhostPosition.x - speed < -0.73) {
-                redGhostDirection = directions[randomDir]
+                redGhostDirection = directions[randomDir];
             } else {
-                if (canMove(redGhostPosition.x, redGhostPosition.y)) {
-                    redGhostPosition.x -= speed
+                if (canMove(redGhostPosition.x - 0.05, redGhostPosition.y)) {
+                    redGhostPosition.x -= speed;
                 }
             }
-            break
+            break;
         case 'right':
             if (redGhostPosition.x + speed > 0.73) {
-                redGhostDirection = directions[randomDir]
+                redGhostDirection = directions[randomDir];
             } else {
-                if (canMove(redGhostPosition.x, redGhostPosition.y)) {
-                    redGhostPosition.x += speed
+                if (canMove(redGhostPosition.x + 0.05, redGhostPosition.y)) {
+                    redGhostPosition.x += speed;
                 }
             }
-            break
+            break;
     }
 
     switch (blueGhostDirection) {
         case 'up':
-            if (blueGhostPosition.y + speed > 0.73 || blueGhostPosition.y + speed > 0.26) {
+            if (blueGhostPosition.y + speed > 0.73) {
                 blueGhostDirection = directions[randomDir]
             } else {
-                blueGhostPosition.y += speed
+                if (canMove(blueGhostPosition.x, blueGhostPosition.y)) {
+                    blueGhostPosition.y += speed
+                }
             }
             break
         case 'down':
             if (blueGhostPosition.y - speed < -0.73) {
                 blueGhostDirection = directions[randomDir]
             } else {
-                blueGhostPosition.y -= speed
+                if (canMove(blueGhostPosition.x, blueGhostPosition.y)) {
+                    blueGhostPosition.y -= speed
+                }
             }
             break
         case 'left':
             if (blueGhostPosition.x - speed < -0.73) {
                 blueGhostDirection = directions[randomDir]
             } else {
-                blueGhostPosition.x -= speed
+                if (canMove(blueGhostPosition.x, blueGhostPosition.y)) {
+                    blueGhostPosition.x -= speed
+                }
             }
             break
         case 'right':
-            if (blueGhostPosition.x + speed > 0.73 || blueGhostPosition.x + speed > 0) {
+            if (blueGhostPosition.x + speed > 0.73) {
                 blueGhostDirection = directions[randomDir]
             } else {
-                blueGhostPosition.x += speed
+                if (canMove(blueGhostPosition.x, blueGhostPosition.y)) {
+                    blueGhostPosition.x += speed
+                }
             }
             break
     }
