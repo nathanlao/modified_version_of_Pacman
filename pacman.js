@@ -293,6 +293,11 @@ function render() {
     if (!isGameOver && gameStart) { 
         moveGhost();
     }
+
+    // Avoid re-request frame when pressing shift+r
+    if (gameRestart) { 
+        cancelAnimationFrame(myReq)
+    }
     
     myReq = requestAnimationFrame(render)
     
@@ -438,17 +443,15 @@ window.addEventListener("keydown", function(event) {
         case "r":
             if (gameStart) { 
                 gamePaused = false
-                requestAnimationFrame(render)
+                render()
             }
             break
         case "R": // shift+r
             if (event.shiftKey) {
                 gameRestart = true
                 restartGame()
-                if (!gamePaused) { 
-                    requestAnimationFrame(render)
-                }
             }
+            break
     }
 
     // Stop the game if all dots are eaten!!
@@ -745,7 +748,7 @@ function restartGame() {
     updateTimer(time);
     // Reset positions
     pacmanPosition = {x: 0.0, y: -0.77};
-    redGhostPosition = {x: 0.0, y: 0.08};
+    redGhostPosition = {x: 0.0, y: 0.1};
     blueGhostPosition = {x: 0.0, y: -0.1};
     // Reset directions
     redGhostDirection = "up";
@@ -755,7 +758,9 @@ function restartGame() {
     updateGhostVertices();
     // Reset dots
     circleVertices = JSON.parse(JSON.stringify(originalCircleVertices)) // Reset the circles
+    specialItemVertice = createVerticalCircleVertices(1, 0.26, 0.0)
 
+    render()
 }
 
 // Logging
