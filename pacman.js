@@ -12,6 +12,8 @@ var programBlueGhost;
 var programCircles;
 var programSpecialCircle;
 
+var specialItemEaten = false;
+
 // Define distance of two adjacent dots 
 var unit = 0.16;
 
@@ -282,9 +284,11 @@ function render() {
     }
 
     // Special item
-    var bufferIdSpecial = createBuffers(specialItemVertice[0])
-    createVertexArrayObjects(bufferIdSpecial, programSpecialCircle)
-    renderTriangleFan(specialItemVertice[0], programSpecialCircle)
+    if (!specialItemEaten) {
+        var bufferIdSpecial = createBuffers(specialItemVertice[0])
+        createVertexArrayObjects(bufferIdSpecial, programSpecialCircle)
+        renderTriangleFan(specialItemVertice[0], programSpecialCircle)
+    }
 
     if (!isGameOver && gameStart) { 
         moveGhost();
@@ -463,6 +467,11 @@ function updatePacmanVertices() {
     for (let key in circleVertices) {
         removeCircle(key)
     }
+
+    if (!specialItemEaten) { 
+        removeSpecialItem()
+    }
+    
 }
 
 function updateGhostVertices() {
@@ -591,6 +600,16 @@ function removeCircle(circleName) {
                 break
             }
         }
+    }
+}
+
+// Helper funtion to remove the special item after got eaten
+function removeSpecialItem() { 
+    if (isColliding(specialItemVertice[0][0], verticesBluePacman)) {
+        specialItemVertice = []
+
+        // TODO: Trigger the special item eaten effect
+        specialItemEaten = true
     }
 }
 
