@@ -607,7 +607,7 @@ function removeCircle(circleName) {
 function removeSpecialItem() { 
     if (isColliding(specialItemVertice[0][0], verticesBluePacman)) {
         specialItemVertice = []
-
+        increaseScore()
         // TODO: Trigger the special item eaten effect
         specialItemEaten = true
     }
