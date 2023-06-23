@@ -445,6 +445,9 @@ window.addEventListener("keydown", function(event) {
             if (event.shiftKey) {
                 gameRestart = true
                 restartGame()
+                if (!gamePaused) { 
+                    requestAnimationFrame(render)
+                }
             }
     }
 
@@ -752,7 +755,7 @@ function restartGame() {
     updateGhostVertices();
     // Reset dots
     circleVertices = JSON.parse(JSON.stringify(originalCircleVertices)) // Reset the circles
-    requestAnimationFrame(render)
+
 }
 
 // Logging
