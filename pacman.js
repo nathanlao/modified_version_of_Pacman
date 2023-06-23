@@ -331,7 +331,7 @@ function moveGhost() {
     var changeDirectionProbability = 0.1
     var randomDir = Math.floor(Math.random() * directions.length)
 
-    var baseSpeed = 0.01
+    var baseSpeed = 0.02
     var timeFactor = (100 - time) / 100 // Time factor increases as time decreases
     var speed = baseSpeed + timeFactor * 0.04  // Speed increases as time decreases
 
@@ -371,7 +371,7 @@ function moveGhost() {
             if (redGhostPosition.x + speed > 0.73) {
                 redGhostDirection = directions[randomDir];
             } else {
-                if (canMove(redGhostPosition.x + 0.05, redGhostPosition.y)) {
+                if (canMove(redGhostPosition.x + 0.08, redGhostPosition.y)) {
                     redGhostPosition.x += speed;
                 }
             }
