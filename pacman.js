@@ -455,15 +455,8 @@ window.addEventListener("keydown", function(event) {
     
     // Update the Pacman's vertices after the position change
     updatePacmanVertices()
-})
 
-function updatePacmanVertices() {
-    verticesBluePacman = [
-        vec2( pacmanPosition.x - 0.05, pacmanPosition.y ), // bottom left 
-        vec2( pacmanPosition.x + 0.05, pacmanPosition.y ), // bottom right
-        vec2( pacmanPosition.x, pacmanPosition.y + 0.1 ) // top 
-    ];
-
+    // Dots are eaten!
     for (let key in circleVertices) {
         removeCircle(key)
     }
@@ -471,7 +464,14 @@ function updatePacmanVertices() {
     if (!specialItemEaten) { 
         removeSpecialItem()
     }
-    
+})
+
+function updatePacmanVertices() {
+    verticesBluePacman = [
+        vec2( pacmanPosition.x - 0.05, pacmanPosition.y ), // bottom left 
+        vec2( pacmanPosition.x + 0.05, pacmanPosition.y ), // bottom right
+        vec2( pacmanPosition.x, pacmanPosition.y + 0.1 ) // top 
+    ];    
 }
 
 function updateGhostVertices() {
